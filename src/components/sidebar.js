@@ -3,14 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
   const location = useLocation();
-  const menuItems = [
-    { path: '/dashboard', icon: 'icon-grid', text: 'Dashboard' },
-    { path: '/user', icon: 'icon-users', text: 'Users' },
-    // { path: '/goals', icon: 'icon-list', text: 'Goals' },
-    // { path: '/income', icon: 'icon-credit-card', text: 'Income' },
-    { path: '/notifications', icon: 'icon-bell', text: 'Notifications' },
-    { path: '/', icon: 'icon-log-out', text: 'Logout' },
-  ];
+  // ...existing code...
 
   return (
     <>
