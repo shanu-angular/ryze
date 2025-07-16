@@ -3,12 +3,21 @@ import Layout from './components/layout';
 import Login from './pages/login';
 import Notification from './pages/Notification';
 import User from './pages/user';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={
+            <Layout activeMenu="dashboard">
+              <Dashboard />
+            </Layout>
+          }
+        />
         <Route
           path="/user"
           element={

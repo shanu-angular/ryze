@@ -77,27 +77,27 @@ function User() {
             {errorMsg}
           </div>
         )}
-        <div className="table-responsive">
-          <table className="table align-middle table-hover">
+        <div className="table-responsive" style={{ maxHeight: "60vh", overflowY: "auto", overflowX: "auto" }}>
+          <table className="table align-middle table-hover" style={{ minWidth: "1100px" }}>
             <thead>
               <tr>
                 <th>#</th>
                 <th>Profile Photo</th>
-                <th onClick={() => handleSort("user_name")} style={{ cursor: "pointer" }}>
-                  Username {sortField === "user_name" ? (sortOrder === "asc" ? "▲" : "▼") : ""}
+                <th onClick={() => handleSort("user_name")} style={{ cursor: "pointer", whiteSpace: "nowrap" }}>
+                  Username {sortField === "user_name" ? (sortOrder === "asc" ? "▲" : "▼") : <span style={{opacity:0.3}}>⇅</span>}
                 </th>
-                <th onClick={() => handleSort("email")} style={{ cursor: "pointer" }}>
-                  Email {sortField === "email" ? (sortOrder === "asc" ? "▲" : "▼") : ""}
+                <th onClick={() => handleSort("email")} style={{ cursor: "pointer", whiteSpace: "nowrap" }}>
+                  Email {sortField === "email" ? (sortOrder === "asc" ? "▲" : "▼") : <span style={{opacity:0.3}}>⇅</span>}
                 </th>
-                <th onClick={() => handleSort("mobile")} style={{ cursor: "pointer" }}>
-                  Mobile {sortField === "mobile" ? (sortOrder === "asc" ? "▲" : "▼") : ""}
+                <th onClick={() => handleSort("mobile")} style={{ cursor: "pointer", whiteSpace: "nowrap" }}>
+                  Mobile {sortField === "mobile" ? (sortOrder === "asc" ? "▲" : "▼") : <span style={{opacity:0.3}}>⇅</span>}
                 </th>
                 <th>Status</th>
-                <th onClick={() => handleSort("total_loans")} style={{ cursor: "pointer" }}>
-                  Total Loans {sortField === "total_loans" ? (sortOrder === "asc" ? "▲" : "▼") : ""}
+                <th onClick={() => handleSort("total_loans")} style={{ cursor: "pointer", whiteSpace: "nowrap" }}>
+                  Total Loans {sortField === "total_loans" ? (sortOrder === "asc" ? "▲" : "▼") : <span style={{opacity:0.3}}>⇅</span>}
                 </th>
-                <th onClick={() => handleSort("total_goals")} style={{ cursor: "pointer" }}>
-                  Total Goals {sortField === "total_goals" ? (sortOrder === "asc" ? "▲" : "▼") : ""}
+                <th onClick={() => handleSort("total_goals")} style={{ cursor: "pointer", whiteSpace: "nowrap" }}>
+                  Total Goals {sortField === "total_goals" ? (sortOrder === "asc" ? "▲" : "▼") : <span style={{opacity:0.3}}>⇅</span>}
                 </th>
                 <th>Last Financial Update</th>
                 <th>Actions</th>
@@ -113,15 +113,26 @@ function User() {
                   <td colSpan={10} style={{ textAlign: "center" }}>No users found.</td>
                 </tr>
               ) : (
-                users.map((user, idx) => (
+                // Sort users client-side if sortField is set
+                [...users].sort((a, b) => {
+                  if (!sortField) return 0;
+                  let valA = a[sortField];
+                  let valB = b[sortField];
+                  if (typeof valA === "string") valA = valA.toLowerCase();
+                  if (typeof valB === "string") valB = valB.toLowerCase();
+                  if (valA < valB) return sortOrder === "asc" ? -1 : 1;
+                  if (valA > valB) return sortOrder === "asc" ? 1 : -1;
+                  return 0;
+                }).map((user, idx) => (
                   <tr key={user.user_id}>
                     <td>{(page - 1) * limit + idx + 1}</td>
                     <td>
-                      {user.profile_photo ? (
-                        <img src={user.profile_photo} alt="Profile" style={{ width: 40, height: 40, borderRadius: "50%" }} />
-                      ) : (
-                        <span style={{ color: "#ccc" }}>No Photo</span>
-                      )}
+                      <img
+                        src={user.profile_photo && user.profile_photo.trim() !== "" ? user.profile_photo : "assets/images/logo/logo.png"}
+                        alt="Profile"
+                        style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover" }}
+                        onError={e => { e.target.onerror = null; e.target.src = "assets/images/logo/logo.png"; }}
+                      />
                     </td>
                     <td>{user.user_name}</td>
                     <td>{user.email}</td>
