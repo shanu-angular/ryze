@@ -12,15 +12,15 @@ const Layout = ({ children, activeMenu, onLogout }) => {
           <Sidebar activeMenu={activeMenu} />
           <div className="section-content-right">
             <Header onLogout={onLogout} />
-            {/* <div className="main-content">
-              <div className="main-content-inner"> */}
+            <div className="main-content">
+              <div className="main-content-inner">
                 <div className="main-content-wrap">{children}</div>
               </div>
             </div>
           </div>
         </div>
-    //   </div>
-    // </div>
+      </div>
+    </div>
   );
 }
 
