@@ -4,17 +4,41 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add login logic here
-    // For now, just log the values
-    // console.log("Email:", email);
-    // console.log("Password:", password);
-    // Redirect to user page
-    navigate("/user");
+    setError("");
+    setLoading(true);
+    try {
+      // Send as form-data (multipart/form-data) for compatibility
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("password", password);
+      const response = await fetch("https://aitechnotech.in/ryze/admin/login", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      if (data.status === "1" && data.results?.access_token) {
+        localStorage.setItem("access_token", data.results.access_token);
+        navigate("/user");
+      } else {
+        setError(data.message || "Login failed");
+      }
+    } catch (err) {
+      setError("Login failed. Please try again.");
+    }
+    setLoading(false);
   };
+
+  // Logout function to clear token
+  // const handleLogout = () => {
+  //   localStorage.removeItem("access_token");
+  //   navigate("/login");
+  // };
 
   return (
     <div id="wrapper">
@@ -29,6 +53,9 @@ function Login() {
                 <h3>Login to account</h3>
                 <div className="body-text">Enter your email &amp; password to login</div>
               </div>
+              {error && (
+                <div className="alert alert-danger text-center" style={{ marginBottom: 12 }}>{error}</div>
+              )}
               <form className="form-login flex flex-column gap24" onSubmit={handleSubmit}>
                 <fieldset className="email">
                   <div className="body-title mb-10">
@@ -44,6 +71,7 @@ function Login() {
                     onChange={(e) => setEmail(e.target.value)}
                     aria-required="true"
                     required
+                    disabled={loading}
                   />
                 </fieldset>
                 <fieldset className="password">
@@ -60,10 +88,11 @@ function Login() {
                     onChange={(e) => setPassword(e.target.value)}
                     aria-required="true"
                     required
+                    disabled={loading}
                   />
                 </fieldset>
-                <button className="btn-primary btn w-full" style={{ height: "50px" }} type="submit">
-                  Login
+                <button className="btn-primary btn w-full" style={{ height: "50px" }} type="submit" disabled={loading}>
+                  {loading ? "Logging in..." : "Login"}
                 </button>
               </form>
             </div>
