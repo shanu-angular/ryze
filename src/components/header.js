@@ -1,13 +1,45 @@
 import { Link } from "react-router-dom"
 
-const Header = ({ onLogout }) => {
-  // const navigate = useNavigate()
+
+import React, { useState, useRef, useEffect } from "react";
+
+const Header = ({ onLogout, onToggleSidebar }) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // const handleToggleSidebar = () => {
+  //   if (onToggleSidebar) {
+  //     onToggleSidebar();
+  //   }
+  // };
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   const handleLogout = () => {
-    localStorage.clear()
-    if (onLogout) onLogout()
-    window.location.href = "/"
-  }
+    localStorage.removeItem('access_token');
+    if (onLogout) onLogout();
+    window.location.href = "/";
+  };
+
+  const handleSidebarToggle = () => {
+    if (onToggleSidebar) onToggleSidebar();
+    // Optionally, you can also manage sidebar state here if needed
+  };
 
   return (
     <div className="header-dashboard">
@@ -19,22 +51,22 @@ const Header = ({ onLogout }) => {
               id="logo_header_mobile"
               alt=""
               src="/assets/images/logo/logo.png"
-              style={{ width: "150px" }}
+              style={{ width: "50px" }}
             />
           </Link>
-          <div className="button-show-hide">
+          <div className="button-show-hide" onClick={handleSidebarToggle} style={{ cursor: 'pointer' }}>
             <i className="icon-menu-left"></i>
           </div>
         </div>
         <div className="header-grid">
           <div className="popup-wrap user type-header">
-            <div className="dropdown">
+            <div className="dropdown" ref={dropdownRef}>
               <button
-                className="btn btn-secondary dropdown-toggle"
+                className={"btn btn-secondary dropdown-toggle" + (dropdownOpen ? " show" : "")}
                 type="button"
                 id="dropdownMenuButton3"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+                aria-expanded={dropdownOpen}
+                onClick={() => setDropdownOpen((open) => !open)}
               >
                 <span className="header-user wg-user">
                   <span className="image">
@@ -46,7 +78,14 @@ const Header = ({ onLogout }) => {
                   </span>
                 </span>
               </button>
-              <ul className="dropdown-menu dropdown-menu-end has-content" aria-labelledby="dropdownMenuButton3">
+              <ul
+                className={
+                  "dropdown-menu dropdown-menu-end has-content" +
+                  (dropdownOpen ? " show" : "")
+                }
+                aria-labelledby="dropdownMenuButton3"
+                style={{ display: dropdownOpen ? "block" : "none" }}
+              >
                 {/* <li>
                   <Link to="/profile" className="user-item" style={{ display: 'flex', alignItems: 'center', width: '100%', textDecoration: 'none', color: 'inherit' }}>
                     <div className="icon">
@@ -69,7 +108,7 @@ const Header = ({ onLogout }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Header

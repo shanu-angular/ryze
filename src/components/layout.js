@@ -1,6 +1,6 @@
-import Sidebar from "./sidebar";
-import Header from "./header";
-// import Footer from "./Footer";
+import Sidebar from "./sidebar"
+import Header from "./header"
+import Footer from "./Footer"
 // import Preloader from "./Preloader"
 
 const Layout = ({ children, activeMenu, onLogout }) => {
@@ -16,12 +16,13 @@ const Layout = ({ children, activeMenu, onLogout }) => {
               <div className="main-content-inner">
                 <div className="main-content-wrap">{children}</div>
               </div>
+              <Footer />
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default Layout

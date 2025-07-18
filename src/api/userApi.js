@@ -2,9 +2,11 @@
 
 const API_BASE = "https://aitechnotech.in/ryze/admin/users";
 
-export async function fetchUsers({ page = 1, limit = 10, search = "", sortField = "", sortOrder = "asc" }) {
+// Fetch users with support for filtering by user_name and email (API docs)
+export async function fetchUsers({ page = 1, limit = 10, user_name = "", email = "", sortField = "", sortOrder = "asc" }) {
   let url = `${API_BASE}?skip=${(page - 1) * limit}&limit=${limit}`;
-  if (search) url += `&search=${encodeURIComponent(search)}`;
+  if (user_name) url += `&user_name=${encodeURIComponent(user_name)}`;
+  if (email) url += `&email=${encodeURIComponent(email)}`;
   if (sortField) url += `&sort=${sortField}&order=${sortOrder}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error("Failed to fetch users");

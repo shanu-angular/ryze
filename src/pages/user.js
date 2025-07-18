@@ -22,7 +22,14 @@ function User() {
   useEffect(() => {
     setLoading(true);
     setErrorMsg("");
-    fetchUsers({ page, limit, search, sortField, sortOrder })
+    fetchUsers({
+      page,
+      limit,
+      user_name: search,
+      email: search,
+      sortField,
+      sortOrder
+    })
       .then((data) => {
         setUsers(data.results?.users || []);
         setTotalPages(data.results?.total_pages || 1);
@@ -35,6 +42,7 @@ function User() {
         setErrorMsg(error.message || "Failed to load data from server");
       });
   }, [page, limit, search, sortField, sortOrder]);
+
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -116,7 +124,7 @@ function User() {
           <input
             type="text"
             className="form-control"
-            placeholder="Search by username, email, mobile..."
+            placeholder="Search by username or email"
             value={search}
             onChange={handleSearch}
             style={{ width: 250 }}
@@ -244,7 +252,6 @@ function User() {
                         onError={e => { e.target.onerror = null; e.target.src = "assets/images/logo/logo.png"; }}
                       />
                     </div>
-                    <div><b>ID:</b> {selectedUser.user_id}</div>
                     <div><b>Name:</b> {selectedUser.user_name}</div>
                     <div><b>Email:</b> {selectedUser.email}</div>
                     <div><b>Mobile:</b> {selectedUser.mobile}</div>

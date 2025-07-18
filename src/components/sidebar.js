@@ -1,9 +1,16 @@
+
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
   const location = useLocation();
-  // ...existing code...
+  const navigate = useNavigate();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem('access_token');
+    navigate('/');
+  };
 
   return (
     <>
@@ -56,10 +63,10 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li className={`menu-item${location.pathname === '/' ? ' active' : ''}`}>
-                <Link to="/" className="menu-item-button">
+                <a href="#logout" className="menu-item-button" onClick={handleLogout}>
                   <div className="icon"><i className="icon-log-out"></i></div>
                   <div className="text">Logout</div>
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
