@@ -7,11 +7,7 @@ const Header = ({ onLogout, onToggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // const handleToggleSidebar = () => {
-  //   if (onToggleSidebar) {
-  //     onToggleSidebar();
-  //   }
-  // };
+
 
   // Close dropdown on outside click
   useEffect(() => {
